@@ -1,2 +1,0 @@
-/data/logs/2024/01/15/logs_20240115.jsonl
-/data/logs/2026/05/13/logs_20260513.jsonl

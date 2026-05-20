@@ -1,7 +1,0 @@
-# Daily log generation at 1 AM
-0 1 * * * root /usr/local/bin/python /app/scripts/run_generator.py --date $(date +\%Y-\%m-\%d) --output-dir /data/logs --format all --logs-per-hour 100 >> /var/log/generator/daily.log 2>&1
-
-# Cleanup old logs every Sunday at 2 AM (keep 30 days)
-0 2 * * 0 root find /data/logs -type f -name "*.jsonl" -mtime +30 -delete >> /var/log/generator/cleanup.log 2>&1
-0 2 * * 0 root find /data/logs -type f -name "*.csv" -mtime +30 -delete >> /var/log/generator/cleanup.log 2>&1
-0 2 * * 0 root find /data/logs -type f -name "*.log" -mtime +30 -delete >> /var/log/generator/cleanup.log 2>&1
