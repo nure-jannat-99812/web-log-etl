@@ -1,0 +1,28 @@
+[2026-05-14T10:12:51.518+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: log_generation_dag.generate_logs manual__2026-05-14T10:07:43.017969+00:00 [queued]>
+[2026-05-14T10:12:51.528+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: log_generation_dag.generate_logs manual__2026-05-14T10:07:43.017969+00:00 [queued]>
+[2026-05-14T10:12:51.528+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 2
+[2026-05-14T10:12:51.539+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): generate_logs> on 2026-05-14 10:07:43.017969+00:00
+[2026-05-14T10:12:51.547+0000] {standard_task_runner.py:60} INFO - Started process 267 to run task
+[2026-05-14T10:12:51.551+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'log_generation_dag', 'generate_logs', 'manual__2026-05-14T10:07:43.017969+00:00', '--job-id', '9', '--raw', '--subdir', 'DAGS_FOLDER/log_generation_dag.py', '--cfg-path', '/tmp/tmpxhzhqhfg']
+[2026-05-14T10:12:51.555+0000] {standard_task_runner.py:88} INFO - Job 9: Subtask generate_logs
+[2026-05-14T10:12:51.646+0000] {task_command.py:423} INFO - Running <TaskInstance: log_generation_dag.generate_logs manual__2026-05-14T10:07:43.017969+00:00 [running]> on host a49f472ec23e
+[2026-05-14T10:12:51.712+0000] {logging_mixin.py:188} WARNING - /home/***/.local/lib/python3.11/site-packages/***/utils/context.py:207 AirflowContextDeprecationWarning: Accessing 'execution_date' from the template is deprecated and will be removed in a future version. Please use 'data_interval_start' or 'logical_date' instead.
+[2026-05-14T10:12:51.750+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_engineer' AIRFLOW_CTX_DAG_ID='log_generation_dag' AIRFLOW_CTX_TASK_ID='generate_logs' AIRFLOW_CTX_EXECUTION_DATE='2026-05-14T10:07:43.017969+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-05-14T10:07:43.017969+00:00'
+[2026-05-14T10:12:51.750+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-05-14T10:12:51.751+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', '\n    if [ "False" = "True" ]; then\n        echo "Skipping log generation - already generated"\n        exit 0\n    else\n        echo "Generating logs for 2026-05-14"\n        docker exec web-log-generator python /app/scripts/run_generator.py             --date 2026-05-14             --format jsonl             --logs-per-hour 100\n    fi\n    ']
+[2026-05-14T10:12:51.759+0000] {subprocess.py:86} INFO - Output:
+[2026-05-14T10:12:51.760+0000] {subprocess.py:93} INFO - Generating logs for 2026-05-14
+[2026-05-14T10:12:51.769+0000] {subprocess.py:93} INFO - Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+[2026-05-14T10:12:51.770+0000] {subprocess.py:97} INFO - Command exited with return code 1
+[2026-05-14T10:12:51.778+0000] {taskinstance.py:2698} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/taskinstance.py", line 433, in _execute_task
+    result = execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/operators/bash.py", line 212, in execute
+    raise AirflowException(
+airflow.exceptions.AirflowException: Bash command failed. The command returned a non-zero exit code 1.
+[2026-05-14T10:12:51.780+0000] {taskinstance.py:1138} INFO - Marking task as UP_FOR_RETRY. dag_id=log_generation_dag, task_id=generate_logs, execution_date=20260514T100743, start_date=20260514T101251, end_date=20260514T101251
+[2026-05-14T10:12:51.786+0000] {standard_task_runner.py:107} ERROR - Failed to execute job 9 for task generate_logs (Bash command failed. The command returned a non-zero exit code 1.; 267)
+[2026-05-14T10:12:51.802+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 1
+[2026-05-14T10:12:51.818+0000] {taskinstance.py:3280} INFO - 0 downstream tasks scheduled from follow-on schedule check

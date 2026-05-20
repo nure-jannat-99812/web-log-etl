@@ -1,0 +1,19 @@
+# Log Generator Configuration
+daily_logs_per_hour: 1000
+output_formats:
+  - jsonl
+  - csv
+retention_days: 30
+
+# Traffic patterns (peak hours)
+peak_hours: [9,10,11,12,13,14,15,16,17]
+peak_multiplier: 3.0
+night_multiplier: 0.1
+
+# Status code distribution
+status_codes:
+  200: 0.85
+  400: 0.05
+  404: 0.05
+  500: 0.03
+  302: 0.02

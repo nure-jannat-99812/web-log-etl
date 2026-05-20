@@ -1,0 +1,18 @@
+[2026-05-14T10:07:46.606+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: log_generation_dag.verify_files scheduled__2026-05-13T01:00:00+00:00 [queued]>
+[2026-05-14T10:07:46.611+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: log_generation_dag.verify_files scheduled__2026-05-13T01:00:00+00:00 [queued]>
+[2026-05-14T10:07:46.611+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 2
+[2026-05-14T10:07:46.617+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): verify_files> on 2026-05-13 01:00:00+00:00
+[2026-05-14T10:07:46.621+0000] {standard_task_runner.py:60} INFO - Started process 190 to run task
+[2026-05-14T10:07:46.623+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'log_generation_dag', 'verify_files', 'scheduled__2026-05-13T01:00:00+00:00', '--job-id', '5', '--raw', '--subdir', 'DAGS_FOLDER/log_generation_dag.py', '--cfg-path', '/tmp/tmplhx5pgjr']
+[2026-05-14T10:07:46.625+0000] {standard_task_runner.py:88} INFO - Job 5: Subtask verify_files
+[2026-05-14T10:07:46.671+0000] {task_command.py:423} INFO - Running <TaskInstance: log_generation_dag.verify_files scheduled__2026-05-13T01:00:00+00:00 [running]> on host a49f472ec23e
+[2026-05-14T10:07:46.747+0000] {logging_mixin.py:188} WARNING - /home/***/.local/lib/python3.11/site-packages/***/utils/context.py:207 AirflowContextDeprecationWarning: Accessing 'execution_date' from the template is deprecated and will be removed in a future version. Please use 'data_interval_start' or 'logical_date' instead.
+[2026-05-14T10:07:46.796+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_engineer' AIRFLOW_CTX_DAG_ID='log_generation_dag' AIRFLOW_CTX_TASK_ID='verify_files' AIRFLOW_CTX_EXECUTION_DATE='2026-05-13T01:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-05-13T01:00:00+00:00'
+[2026-05-14T10:07:46.797+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-05-14T10:07:46.797+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', '\n    if [ "True" = "True" ]; then\n        echo "✅ Already generated. Skipping verification."\n        exit 0\n    fi\n    \n    FILE="/data/logs/2026/05/13/logs_20260513.jsonl"\n    if [ -f "$FILE" ]; then\n        echo "=========================================="\n        echo "✅ GENERATION COMPLETE"\n        echo "=========================================="\n        echo "Date: 2026-05-13"\n        echo "File: $FILE"\n        echo "Records: $(wc -l < $FILE)"\n        echo "Size: $(du -h $FILE | cut -f1)"\n        echo "=========================================="\n        exit 0\n    else\n        echo "❌ File missing: $FILE"\n        exit 1\n    fi\n    ']
+[2026-05-14T10:07:46.810+0000] {subprocess.py:86} INFO - Output:
+[2026-05-14T10:07:46.813+0000] {subprocess.py:93} INFO - ✅ Already generated. Skipping verification.
+[2026-05-14T10:07:46.813+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2026-05-14T10:07:46.855+0000] {taskinstance.py:1138} INFO - Marking task as SUCCESS. dag_id=log_generation_dag, task_id=verify_files, execution_date=20260513T010000, start_date=20260514T100746, end_date=20260514T100746
+[2026-05-14T10:07:46.915+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 0
+[2026-05-14T10:07:46.950+0000] {taskinstance.py:3280} INFO - 1 downstream tasks scheduled from follow-on schedule check

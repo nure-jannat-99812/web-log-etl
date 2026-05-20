@@ -1,0 +1,19 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy requirements and install
+COPY generator/requirements.txt /app/generator/
+RUN pip install --no-cache-dir -r /app/generator/requirements.txt
+
+# Copy generator code
+COPY generator/ /app/generator/
+COPY scripts/ /app/scripts/
+
+# Create directories
+RUN mkdir -p /data/logs
+
+ENV PYTHONPATH=/app
+
+# Keep container alive
+CMD ["tail", "-f", "/dev/null"]
