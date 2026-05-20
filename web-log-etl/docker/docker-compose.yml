@@ -1,0 +1,119 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: web-log-postgres
+    environment:
+      POSTGRES_DB: log_analytics
+      POSTGRES_USER: etl_user
+      POSTGRES_PASSWORD: etl_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U etl_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - etl_network
+
+  log-generator:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.generator
+    container_name: web-log-generator
+    volumes:
+      - ../data/logs:/data/logs
+      - ../generator:/app/generator
+      - ../scripts:/app/scripts
+    environment:
+      - OUTPUT_DIR=/data/logs
+      - LOGS_PER_HOUR=100
+      - PYTHONPATH=/app
+    command: tail -f /dev/null
+    restart: unless-stopped
+    networks:
+      - etl_network
+
+  airflow-postgres:
+    image: postgres:15
+    container_name: airflow-postgres
+    environment:
+      POSTGRES_DB: airflow
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+    volumes:
+      - airflow_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - etl_network
+
+  airflow-webserver:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.airflow
+    container_name: airflow-webserver
+    restart: always
+    depends_on:
+      airflow-postgres:
+        condition: service_healthy
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres/airflow
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__API__SECRET_KEY: 2X8GCQ-0vj0_EYBWYzbocRya6S4A25CKghah2Oao_w8
+      AIRFLOW__WEBSERVER__SECRET_KEY: 2X8GCQ-0vj0_EYBWYzbocRya6S4A25CKghah2Oao_w8
+      AIRFLOW__CORE__FERNET_KEY: ""
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../dags:/opt/airflow/dags
+      - ../scripts:/opt/airflow/scripts
+      - ../src:/opt/airflow/src
+      - ../generator:/opt/airflow/generator
+      - ../data/logs:/data/logs
+    command: webserver
+    networks:
+      - etl_network
+
+  airflow-scheduler:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.airflow
+    container_name: airflow-scheduler
+    restart: always
+    depends_on:
+      airflow-postgres:
+        condition: service_healthy
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres/airflow
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__API__SECRET_KEY: 2X8GCQ-0vj0_EYBWYzbocRya6S4A25CKghah2Oao_w8
+      AIRFLOW__WEBSERVER__SECRET_KEY: 2X8GCQ-0vj0_EYBWYzbocRya6S4A25CKghah2Oao_w8
+      AIRFLOW__CORE__FERNET_KEY: ""
+    volumes:
+      - ../dags:/opt/airflow/dags
+      - ../scripts:/opt/airflow/scripts
+      - ../src:/opt/airflow/src
+      - ../generator:/opt/airflow/generator
+      - ../data/logs:/opt/airflow/data/logs
+    command: scheduler
+    networks:
+      - etl_network
+
+networks:
+  etl_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  airflow_postgres_data:
